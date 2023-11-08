@@ -21,6 +21,17 @@ const config = {
         var content = node.textContent;
         return content.length > length ? content.slice(0, length) + clamp : content;
     },
+    initial(text, length = 2) {
+        let words = text.split(" ")
+        let initial = "";
+        for (let i = 0; i < length; i++){
+            if(words[i]){
+                initial = initial + words[i][0]
+            }
+        }
+
+        return initial;
+    },
     ucword(value) {
         if (!value) return '';
         value = value.toString();

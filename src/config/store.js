@@ -4,7 +4,14 @@ import { createStore } from 'vuex'
 const store = createStore({
     state () {
         return {
-            project_setup_cat_ids: {}
+            project_setup_cat_ids: {},
+            user: {
+                email: '',
+                id: '',
+                institution_id: '',
+                name: "",
+                role: "",
+            }
         }
     },
     mutations: {

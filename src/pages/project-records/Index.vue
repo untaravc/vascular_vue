@@ -72,11 +72,14 @@
                                             </span>
                                         </td>
                                         <td class="action">
-                                            <router-link
+                                            <router-link v-if="$store.state.user.institution_id == data.institution_id"
                                                 :to="'/panel/p/'+$route.params.project_id+'/inputs?record_id=' + data.id"
                                                 class="btn btn-sm btn-primary">
                                                 Edit
                                             </router-link>
+                                            <button disabled v-else class="btn btn-sm btn-secondary">
+                                                Edit
+                                            </button>
                                         </td>
                                     </tr>
                                     <tr v-if="data_content.data.length === 0">

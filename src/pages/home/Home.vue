@@ -18,8 +18,8 @@
                         <div class="card h-xl-100">
                             <div class="card-header border-0 pt-5">
                                 <h3 class="card-title align-items-start flex-column">
-                                    <span class="card-label fw-bold text-dark">{{project.name}}</span>
-                                    <span class="text-muted mt-1 fw-semibold fs-7">{{project.records_count}} Records</span>
+                                    <span class="card-label fw-bold text-dark">Global Record</span>
+                                    <span class="text-muted mt-1 fw-semibold fs-7">Total {{project.records_count}}</span>
                                 </h3>
                             </div>
                             <div class="card-body pt-6">
@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <UserOnline></UserOnline>
                     </div>
                 </div>

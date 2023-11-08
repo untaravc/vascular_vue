@@ -105,6 +105,8 @@ export default {
             this.authGet('auth')
             .then((data)=>{
                 this.user = data.result
+                this.$store.state.user = data.result
+                console.log(this.$store.state.user)
             })
         }
     }
