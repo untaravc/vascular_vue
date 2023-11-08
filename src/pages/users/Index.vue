@@ -46,6 +46,7 @@
                                         <th style="width: 250px">Name</th>
                                         <th style="width: 200px">Role</th>
                                         <th>Institution</th>
+                                        <th>Access</th>
                                         <th class="action">Action</th>
                                     </tr>
                                     </thead>
@@ -58,9 +59,16 @@
                                         </td>
                                         <td>{{ data.role_label }}</td>
                                         <td>
-                                            <span v-if="data.institution">
+                                            <div v-if="data.institution">
                                                 {{ data.institution.name }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div v-if="data.institutions">
+                                                <span v-for="inst in data.institutions">
+                                                    {{ inst.name }},
                                             </span>
+                                            </div>
                                         </td>
                                         <td class="action">
                                             <button class="btn btn-sm btn-primary" @click="editModal(data)">
@@ -179,15 +187,26 @@
                                         <div class="form-group">
                                             <label class="form-label">Institution</label>
                                             <select class="form-control form-control-solid"
-                                                    v-model="form.institution_id"
-                                                    :class="{ 'is-invalid': form.errors.has('institution_id') }">>
-                                                <option value="">Select Institution</option>
-                                                <option :value="int.id" v-for="int in data_raw.institutions" :key="int.id">
-                                                    {{int.name}}
+                                                    v-model="form.institution_id">
+                                                <option :value="inst.id" v-for="inst in data_raw.institutions">
+                                                    {{ inst.name }}
                                                 </option>
                                             </select>
                                             <div v-if="form.errors.has('institution_id')"
                                                  v-html="form.errors.get('institution_id')"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Access</label>
+                                            <v-select style="background-color: var(--kt-input-solid-bg);
+                                                        border-color: var(--kt-input-solid-bg);
+                                                        color: var(--kt-input-solid-color);
+                                                        transition: color .2s ease;" multiple
+                                                      v-model="form.institution_ids"
+                                                      :reduce="name => name.id"
+                                                      label="name"
+                                                      :options="data_raw.institutions"/>
                                         </div>
                                     </div>
                                 </div>
@@ -233,6 +252,8 @@ export default {
                 email: '',
                 role_id: '',
                 institution_id: '',
+                institutions: [],
+                institution_ids: [],
                 password: '',
                 password_confirmation: '',
             }),
@@ -344,5 +365,9 @@ export default {
 <style scoped>
 .cursor-pointer:hover {
     font-weight: bolder;
+}
+
+.vs__dropdown-toggle{
+    height: 35px;
 }
 </style>

@@ -54,7 +54,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Sub Category</label>
-                                <select class="form-control" v-model="form.category_id" @change="parseSubCat"
+                                <select class="form-control" v-model="form.category_id"
                                         :class="{ 'is-invalid': form.errors.has('category_id') }">
                                     <option value="">Select Sub Category</option>
                                     <option :value="sub_cat.id" :key="sub_cat.id"
@@ -87,7 +87,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Currency</label>
-                                <select class="form-control" v-model="form.is_currency" @change="parseSubCat"
+                                <select class="form-control" v-model="form.is_currency"
                                         :class="{ 'is-invalid': form.errors.has('is_currency') }">
                                     <option value="0">Non Currency</option>
                                     <option value="1">Currency</option>
@@ -108,8 +108,20 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label>Blank Option</label>
+                                <select class="form-control" v-model="form.blank_option"
+                                        :class="{ 'is-invalid': form.errors.has('blank_option') }">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div v-if="form.errors.has('status')"
+                                 v-html="form.errors.get('status')"/>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label>Status</label>
-                                <select class="form-control" v-model="form.status" @change="parseSubCat"
+                                <select class="form-control" v-model="form.status"
                                         :class="{ 'is-invalid': form.errors.has('status') }">
                                     <option value="0">Non Active</option>
                                     <option value="1">Active</option>
@@ -118,7 +130,11 @@
                             <div v-if="form.errors.has('status')"
                                  v-html="form.errors.get('status')"/>
                         </div>
-                        <div class="col-12" style="text-align: right">
+                        <div class="col-12">
+                            <label>Deskripsi</label>
+                            <VueEditor v-model="form.note" useCustomImageHandler @image-added="handleImageAdded"></VueEditor>
+                        </div>
+                        <div class="col-12 mt-3" style="text-align: right">
                             <button :disabled="disabled" v-if="!edit_mode" @click="createData"
                                     class="btn btn-sm btn-primary">
                                 Create
@@ -250,7 +266,9 @@
 </template>
 
 <script>
+import {VueEditor} from "vue3-editor";
 export default {
+    components:{VueEditor},
     data() {
         return {
             loader: false,
@@ -271,6 +289,7 @@ export default {
             form: new form({
                 id: '',
                 parent_id: '',
+                blank_option: '',
                 category_id: '',
                 project_id: '',
                 institution_id: '',
@@ -284,6 +303,7 @@ export default {
                 dependency_id: '',
                 dependency_value: '',
                 status: '',
+                note: '',
             }),
             input_detail: new form({
                 id: '',
@@ -445,8 +465,24 @@ export default {
                 return item.id === this.form.dependency_id
             })
 
+            if(input.length > 0){
             this.data_raw.input_details = input[0].input_details
         }
+    },
+        handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+            var formData = new FormData();
+            formData.append("file", file);
+
+            this.authPost('file-upload', formData)
+                .then((data) => {
+                    const url = data.result.link; // Get url from response
+                    Editor.insertEmbed(cursorLocation, "image", url);
+                    resetUploader();
+                })
+                .catch(err => {
+
+                });
+        },
     },
     created() {
         this.loadProject();
@@ -465,3 +501,8 @@ export default {
     },
 }
 </script>
+<style>
+.form-group{
+    margin-bottom: 4px;
+}
+</style>

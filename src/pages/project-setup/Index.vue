@@ -206,10 +206,14 @@ export default {
         updateCat() {
             this.disabled = true;
             this.category.patch(this.base_api + 'categories/' + this.category.id, this.setHeader())
-                .then(() => {
+                .then((data) => {
                     this.disabled = false;
+                    if(data.status){
                     $('#modal_category').modal('hide')
                     this.loadCategories();
+                    } else {
+                        alert(data.message)
+                    }
                 }).catch(() => {
                 this.disabled = false;
             })
@@ -231,10 +235,14 @@ export default {
         addCategory() {
             this.disabled = true;
             this.category.post(this.base_api + 'categories', this.setHeader())
-                .then(() => {
+                .then((data) => {
                     this.disabled = false;
+                    if(data.status){
                     $('#modal_category').modal('hide')
                     this.loadCategories();
+                    } else {
+                        alert(data.message)
+                    }
                 }).catch(() => {
                 this.disabled = false;
             })
@@ -243,10 +251,14 @@ export default {
             if(confirm('Delete category ' + this.category.name + '?')){
                 this.disabled = true;
                 this.category.delete(this.base_api + 'categories/' + this.category.id, this.setHeader())
-                    .then(() => {
+                    .then((data) => {
                         this.disabled = false;
+                        if(data.status){
                         $('#modal_category').modal('hide')
                         this.loadCategories();
+                        } else {
+                            alert(data.message)
+                        }
                     }).catch(() => {
                     this.disabled = false;
                 })

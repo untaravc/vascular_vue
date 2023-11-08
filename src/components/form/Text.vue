@@ -1,21 +1,32 @@
 <template>
-    <div class="col-md-6 mb-4" v-if="question.type === 'text'">
+    <div class="col-md-6 mb-4 p-2 " v-if="question.type === 'text'">
         <div class="d-flex justify-content-between">
-            <b>{{question.name}}</b>
+            <b>
+                {{ question.name }}
+                <i class="fa fa-question-circle cursor-pointer" v-if="question.note" @click="emitter.emit('modal-note', question);"></i>
+            </b>
             <label class="cursor-pointer info-style" @click="modalLog(question.id)">input logs</label>
         </div>
         <input type="text" :value="record_value" class="form-control" @focusout="updateInput($event.target.value)">
     </div>
-    <div class="col-md-6 mb-4" v-if="question.type === 'textarea'">
+
+    <div class="col-md-6 mb-4 p-2 " v-if="question.type === 'textarea'">
         <div class="d-flex justify-content-between">
-            <b>{{question.name}}</b>
+            <b>
+                {{ question.name }}
+                <i class="fa fa-question-circle cursor-pointer" v-if="question.note" @click="emitter.emit('modal-note', question);"></i>
+            </b>
             <label class="cursor-pointer info-style" @click="emitter.emit('modal-log', question.id, 'textarea');">input logs</label>
         </div>
         <textarea type="text" :value="record_value" class="form-control" @focusout="updateInput($event.target.value)"></textarea>
     </div>
-    <div class="col-md-6 mb-4" v-if="question.type === 'number'">
+
+    <div class="col-md-6 mb-4 p-2 " v-if="question.type === 'number'">
         <div class="d-flex justify-content-between">
-            <b>{{question.name}}</b>
+            <b>
+                {{ question.name }}
+                <i class="fa fa-question-circle cursor-pointer" v-if="question.note" @click="emitter.emit('modal-note', question);"></i>
+            </b>
             <label class="cursor-pointer info-style" @click="emitter.emit('modal-log', question.id);">input logs</label>
         </div>
         <input type="number" :value="record_value" v-if="question.suffix === null" class="form-control"
@@ -25,9 +36,13 @@
             <span class="input-group-text">{{question.suffix}}</span>
         </div>
     </div>
-    <div class="col-md-6 mb-4" v-if="question.type === 'select'">
+
+    <div class="col-md-6 mb-4 p-2 " v-if="question.type === 'select'">
         <div class="d-flex justify-content-between">
-            <b>{{question.name}}</b>
+            <b>
+                {{ question.name }}
+                <i class="fa fa-question-circle cursor-pointer" v-if="question.note" @click="emitter.emit('modal-note', question);"></i>
+            </b>
             <label class="cursor-pointer info-style" @click="emitter.emit('modal-log', question.id);">input logs</label>
         </div>
         <select :value="record_value" class="form-control" @change="updateInput($event.target.value)">
@@ -35,17 +50,22 @@
             <option v-for="(opt, o) in question.children" :key="o" :value="opt.value">{{opt.name}}</option>
         </select>
     </div>
-    <div class="col-md-6 mb-4" v-if="question.type === 'radio'">
+
+    <div class="col-md-6 mb-4 p-2 " v-if="question.type === 'radio'">
         <div class="d-flex justify-content-between">
-            <b>{{question.name}}</b>
+            <b>
+                {{ question.name }}
+                <i class="fa fa-question-circle cursor-pointer" v-if="question.note" @click="emitter.emit('modal-note', question);"></i>
+            </b>
             <label class="cursor-pointer info-style" @click="emitter.emit('modal-log', question.id);">input logs</label>
         </div>
         <div class="row p-2">
-            <div class="col d-flex align-items-center cursor-pointer" @click="updateInput('')">
+            <div class="col d-flex align-items-center cursor-pointer" v-if="question.blank_option"
+                 @click="updateInput('')">
                 <unicon :name="input_value === '' ? 'check-circle' : 'circle'"
                         hover-fill="#17a8f8" :fill="input_value === '' ? '#17a8f8' : 'grey'" ></unicon>
                 <div class="ms-2">
-                    None
+                    Unknown
                 </div>
             </div>
             <div class="col d-flex align-items-center cursor-pointer" @click="updateInput(opt.value)"
@@ -58,16 +78,24 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 mb-4" v-if="question.type === 'date'">
+
+    <div class="col-md-6 mb-4 p-2 " v-if="question.type === 'date'">
         <div class="d-flex justify-content-between">
-            <b>{{question.name}}</b>
+            <b>
+                {{ question.name }}
+                <i class="fa fa-question-circle cursor-pointer" v-if="question.note" @click="emitter.emit('modal-note', question);"></i>
+            </b>
             <label class="cursor-pointer info-style" @click="modalLog(question.id)">input logs</label>
         </div>
         <input type="date" :value="record_value" class="form-control" @focusout="updateInput($event.target.value)">
     </div>
-    <div class="col-md-6 mb-4" v-if="question.type === 'checkbox'">
+
+    <div class="col-md-6 mb-4 p-2 " v-if="question.type === 'checkbox'">
         <div class="d-flex justify-content-between">
-            <b>{{question.name}}</b>
+            <b>
+                {{ question.name }}
+                <i class="fa fa-question-circle cursor-pointer" v-if="question.note" @click="emitter.emit('modal-note', question);"></i>
+            </b>
             <label class="cursor-pointer info-style" @click="modalLog(question.id)">input logs</label>
         </div>
         <div>

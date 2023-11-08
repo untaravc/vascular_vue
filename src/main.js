@@ -28,11 +28,14 @@ app.component('laravel-pagination', LaravelVuePagination)
 
 import money from 'v-money3'
 
+import VueSelect from "vue-select";
+
 // Spinner
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import BounceLoader from 'vue-spinner/src/BounceLoader.vue'
 app.component('BounceLoader', BounceLoader);
 app.component('PulseLoader', PulseLoader);
+app.component('v-select', VueSelect);
 app.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 
 app.use(router)

@@ -39,7 +39,12 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-
+                            <select class="form-control form-control-solid" @change="loadDataContent" v-model="filter.category_id">
+                                <option value="">Select Institution</option>
+                                <option :value="inst.id" :key="inst.id" v-for="inst in data_raw.institutions">
+                                    {{inst.name}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     </div>
@@ -58,6 +63,7 @@
                                         <th>Name</th>
                                         <th>DoB</th>
                                         <th>Cetegory</th>
+                                        <th>Institution</th>
                                         <th class="action">Action</th>
                                     </tr>
                                     </thead>
@@ -71,13 +77,18 @@
                                                 {{ data.category.name }}
                                             </span>
                                         </td>
+                                        <td>
+                                            <span v-if="data.institution">
+                                                {{ data.institution.name }}
+                                            </span>
+                                        </td>
                                         <td class="action">
-                                            <router-link v-if="$store.state.user.institution_id == data.institution_id"
+                                            <router-link v-if="data.access"
                                                 :to="'/panel/p/'+$route.params.project_id+'/inputs?record_id=' + data.id"
                                                 class="btn btn-sm btn-primary">
                                                 Edit
                                             </router-link>
-                                            <button disabled v-else class="btn btn-sm btn-secondary">
+                                            <button v-if="!data.access" class="btn btn-sm btn-secondary disabled">
                                                 Edit
                                             </button>
                                         </td>
@@ -137,7 +148,8 @@ export default {
                 data:[]
             },
             data_raw: {
-                categories: []
+                categories: [],
+                institutions: [],
             },
             filter: {
                 page: 1,
@@ -176,11 +188,17 @@ export default {
             }).then((data)=>{
                 this.data_raw.categories = data.result
             })
+        },
+        loadInstitution(){
+            this.authGet('institutions-list').then((data)=>{
+                this.data_raw.institutions = data.result
+            })
         }
     },
     created() {
         this.loadDataContent();
         this.loadCategories();
+        this.loadInstitution();
     },
 }
 </script>

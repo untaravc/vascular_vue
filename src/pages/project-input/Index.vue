@@ -20,18 +20,7 @@
         <div class="app-content flex-column-fluid">
             <div class="app-container container-xxl">
                 <div class="card p-6">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label>Nama</label>
-                            <input type="text" :disabled="edit_mode" class="form-control" v-model="patient.name">
-                            <div v-if="patient.errors.has('name')" v-html="patient.errors.get('name')"/>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Tanggal Lahir</label>
-                            <input type="date" :disabled="edit_mode" placeholder="dd-mm-yyyy" class="form-control" v-model="patient.dob">
-<!--                            <VueCtkDateTimePicker v-model="patient.dob" v-bind="data_config"></VueCtkDateTimePicker>-->
-                            <div v-if="patient.errors.has('dob')" v-html="patient.errors.get('dob')"/>
-                        </div>
+                    <div class="row mb-4">
                         <div class="col-md-4">
                             <label>Diagnosis</label>
                             <select class="form-control" :disabled="edit_mode" v-model="patient.category_id">
@@ -40,7 +29,25 @@
                                     }}
                                 </option>
                             </select>
-                            <div v-if="patient.errors.has('category_id')" v-html="patient.errors.get('category_id')"/>
+                            <div v-if="patient.errors.has('category_id')" class="text-danger" v-html="patient.errors.get('category_id')"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Nama</label>
+                            <input type="text" :disabled="edit_mode" class="form-control" v-model="patient.name">
+                            <div v-if="patient.errors.has('name')" class="text-danger" v-html="patient.errors.get('name')"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Tanggal Lahir</label>
+                            <input type="date" :disabled="edit_mode" placeholder="dd-mm-yyyy" class="form-control" v-model="patient.dob">
+<!--                            <VueCtkDateTimePicker v-model="patient.dob" v-bind="data_config"></VueCtkDateTimePicker>-->
+                            <div v-if="patient.errors.has('dob')" class="text-danger" v-html="patient.errors.get('dob')"/>
+                        </div>
+                        <div class="col-md-4">
+                            <label>NIK</label>
+                            <input type="number" :disabled="edit_mode" class="form-control" v-model="patient.nik">
+                            <div v-if="patient.errors.has('nik')" class="text-danger" v-html="patient.errors.get('nik')"/>
                         </div>
                         <div class="col-12 pt-3" style="text-align: center" v-if="!edit_mode">
                             <button class="btn btn-sm btn-success" :disabled="disabled" @click="addPatient">
@@ -130,6 +137,19 @@
                     </div>
                 </div>
 
+                <div class="modal fade" id="note_modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div v-if="data_detail.note" v-html="data_detail.note"></div>
+                                <div v-else class="italic">
+                                    <i>Tidak ada catatan</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -147,10 +167,12 @@ export default {
             edit_mode: false,
             project_categories: [],
             disabled: false,
+            data_detail: false,
             patient: new form({
                 name: '',
                 project_id: '',
                 dob: '',
+                nik: '',
                 category_id: '',
             }),
             record: {},
@@ -176,8 +198,13 @@ export default {
             this.patient.project_id = this.$route.params.project_id
             this.patient.post(this.base_api + 'patients', this.setHeader())
                 .then(({data}) => {
+                    if(data.status){
                     window.location = '/panel/p/' + this.$route.params.project_id + '/inputs?record_id=' + data.result.record.id;
                     this.disabled = false;
+                    } else {
+                        alert(data.text)
+                    }
+
                 }).catch(() => {
                 this.disabled = false;
             })
@@ -214,6 +241,10 @@ export default {
                 this.loader_log = false;
             })
         },
+        noteModal(data) {
+            this.data_detail = data
+            $('#note_modal').modal('show');
+        },
         deleteData() {
             if (confirm('Delete record?')) {
                 this.$axios.delete(this.base_api + 'records/' + this.$route.query.record_id, this.setHeader())
@@ -241,6 +272,10 @@ export default {
 
         this.emitter.on('modal-log', (input_id, note = null) => {
             this.modalLog(input_id)
+        })
+
+        this.emitter.on('modal-note', (data) => {
+            this.noteModal(data)
         })
     },
     components: {TextInput}
